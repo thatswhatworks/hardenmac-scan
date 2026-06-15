@@ -1,0 +1,17 @@
+# Known AMOS/Atomic/SHAMOS dropped & hidden files. Format: one path per line, '#' = comment.
+# ~ expands to the current user's home. Sources: iru.com, Huntress, CrowdStrike, Field Effect.
+# Last reviewed: 2026-06-15.
+~/.helper
+~/.mainhelper
+~/.agent
+~/.pass
+~/.logged
+/tmp/.pass
+~/Library/Application Support/.com.apple.accountsd/AccountsHelper
+/tmp/starter
+/tmp/out.zip
+/tmp/helper
+/private/tmp/helper
+/tmp/app.zip
+/tmp/apptwo.zip
+/tmp/appex.zip

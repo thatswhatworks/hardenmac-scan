@@ -1,0 +1,6 @@
+# Known AMOS/Atomic/SHAMOS LaunchDaemon & LaunchAgent persistence labels.
+# These mimic legitimate Apple process names. Format: one label per line, '#' = comment.
+# Sources: iru.com, BleepingComputer, CrowdStrike, Field Effect, infostealers.com (2025-2026).
+# Last reviewed: 2026-06-15. AMOS rotates — a clean match here is not a guarantee.
+com.finder.helper
+com.apple.accountsd.helper

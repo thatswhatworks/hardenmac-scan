@@ -1,0 +1,19 @@
+# Known AMOS/Atomic/SHAMOS C2 infrastructure (publicly reported).
+# Format: one indicator per line (IP or domain), '#' = comment.
+# Sources: Rewterz, iru.com, Field Effect (2025-2026). Last reviewed: 2026-06-15.
+#
+# CAVEAT: AMOS rotates infrastructure frequently. Absence here means NOTHING —
+# a current campaign may use IPs/domains not yet public. This is a known-bad
+# check, not a clean bill of health.
+45.94.47.145
+45.94.47.147
+45.94.47.204
+92.246.136.14
+laislivon.com
+wusetail.com
+systellis.com
+arkypc.com
+lakhov.com
+ouilov.com
+foto.gd
+mpasvw.com
