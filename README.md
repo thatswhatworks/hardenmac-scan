@@ -2,7 +2,9 @@
 
 **A read-only check for AMOS / Atomic / SHAMOS infostealer indicators on macOS.**
 
-My Mac ran this exact malware for about three months. It disguised itself as `com.apple.accountsd`, relaunched roughly once a second, wrote my login password to `~/.pass`, and my antivirus reported clean the entire time. This script checks for what I missed.
+My Mac was hit by a persistent infostealer — behavior consistent with credential-stealing and remote-access malware, though the specific family was not independently confirmed. Evidence shows it was present by April 3 and discovered June 6 — roughly two months. It disguised itself as `com.apple.accountsd`, relaunched roughly once a second, and a hidden file containing my login password was found near the malicious components (a hidden `~/.pass` file). My antivirus reported clean while persistence remained. This script checks for what I missed.
+
+**What it can't do:** it checks a limited set of known indicators — it **cannot identify a malware family, prove a Mac is infected, or prove a Mac is clean.** A hit flags a known indicator to investigate. A clean result means none of the indicators checked by this version were found. It does not prove the Mac is clean.
 
 ---
 
@@ -11,7 +13,7 @@ My Mac ran this exact malware for about three months. It disguised itself as `co
 One shell script. It checks five layers for **known** indicators of the AMOS/Atomic/SHAMOS family:
 
 1. **Persistence** — LaunchDaemons/Agents disguised as Apple services (`com.apple.accountsd.helper`, `com.finder.helper`), plus the AMOS loader signature (a shell run against a hidden home dotfile with a `KeepAlive` relaunch loop).
-2. **Dropped files** — the known hidden artifacts (`~/.pass`, `~/.helper`, `~/.agent`, `~/.logged`, staged `/tmp` archives, the `AccountsHelper` backdoor implant).
+2. **Dropped files** — the known hidden artifacts (`~/.pass`, `~/.helper`, `~/.agent`, `~/.logged`, staged `/tmp` archives, the `AccountsHelper` implant).
 3. **C2 indicators** — known infrastructure in `/etc/hosts` and your current network connections.
 4. **Crypto-wallet integrity** — signature check on Ledger Live, Trezor Suite, and Exodus (AMOS replaces these with trojanized builds).
 5. **Delivery-vector traces** — `curl … | bash` and `osascript` + `sudo -S` patterns in your shell history (the ClickFix / AI-tool paste lure, including the documented Cursor + Claude Code vector).
@@ -39,15 +41,15 @@ Do **not** pipe it from the internet into a shell (`curl ... | sh`). That is the
 
 | Exit | Meaning |
 |------|---------|
-| `0`  | No known indicators found. **This is not a guarantee** — these families rotate file names and infrastructure constantly. It lowers the odds; it does not prove you're clean. |
+| `0`  | No known indicators found. **This is not a guarantee** — a clean result means none of the indicators checked by this version were found; it does not prove the Mac is clean. These families rotate file names and infrastructure constantly. |
 | `1`  | Suspicious item(s) — investigate each. Often a false-positive worth ruling out. |
-| `2`  | Known-bad indicator(s) found. Treat every credential this machine has touched as compromised and work through recovery. |
+| `2`  | Known-bad indicator(s) found. Treat the relevant accounts, sessions, and credentials as potentially exposed, move recovery to a trusted device, and begin the review and rotation process. |
 
 A clean result is the moment to **harden**, not relax: <https://hardenmac.com/checklist>
 
 ## Why "clean" still mattered to me
 
-My antivirus showed a green dashboard the whole time I was infected. The root-level persistence was still installed and one item was still running as root when I finally audited it by hand. Tools that say "you're fine" are exactly how this stuff dwells for months. This script tells you what it actually checked and what it can't promise.
+My antivirus showed a green dashboard while the persistence remained installed. The root-level persistence was still installed and one item was still running as root when I finally audited it by hand. A reassuring result without transparent scope can create false confidence. This script states exactly what it checks and what it cannot establish.
 
 ## Indicators & sources
 

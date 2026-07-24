@@ -2,10 +2,12 @@
 #
 # hardenmac-scan — read-only AMOS / Atomic / SHAMOS infostealer indicator check for macOS
 # ---------------------------------------------------------------------------------------
-# I built this after an AMOS-class infostealer ran on my Mac for ~3 months. It disguised
-# itself as com.apple.accountsd, relaunched about once a second, wrote my login password
-# to ~/.pass, and my antivirus reported clean the entire time. This script checks for what
-# I missed.
+# I built this after a persistent Mac infostealer ran on my Mac — behavior consistent with
+# credential-stealing and remote-access malware, though the specific family was not
+# independently confirmed. Evidence shows it was present by April 3 and discovered June 6
+# (~2 months). It disguised itself as com.apple.accountsd, relaunched about once a second,
+# a hidden file containing my login password was found near it (a hidden ~/.pass file). My
+# antivirus reported clean while persistence remained. This script checks for what I missed.
 #
 # WHAT THIS DOES:  read-only checks for KNOWN indicators of the AMOS/Atomic/SHAMOS family.
 # WHAT IT NEVER DOES:  no network calls, no sudo, no writes, no deletions, no telemetry.
@@ -16,9 +18,11 @@
 # USAGE:   sh scan.sh
 # EXIT:    0 = no known indicators found   1 = suspicious item(s)   2 = known-bad item(s)
 #
-# A CLEAN RESULT IS NOT A GUARANTEE. These families rotate file names and infrastructure.
-# This checks documented indicators as of the date below. If it finds nothing, that lowers
-# the odds — it does not prove you are clean. Harden anyway.
+# A CLEAN RESULT IS NOT A GUARANTEE. This checks a limited set of documented indicators as of
+# the date below; it cannot identify a malware family, prove a Mac is infected, or prove a Mac
+# is clean. A hit flags a known indicator to investigate. A clean result means none of the
+# indicators checked by this version were found; it does not prove the Mac is clean. These
+# families rotate file names and infrastructure. Harden anyway.
 #
 # IOCs reviewed: 2026-06-15. Sources: Objective-See, Jamf, SentinelOne, BleepingComputer,
 #   CrowdStrike, Field Effect, Huntress, iru.com, Rewterz. See iocs/ in the repo.
@@ -112,7 +116,7 @@ do
     case "$path" in
       */.pass) note="AMOS caches the stolen login password here in PLAINTEXT — treat the password as compromised." ;;
       */.logged) note="AMOS marker file (often contains the string 'User10')." ;;
-      *AccountsHelper) note="Known backdoor implant path." ;;
+      *AccountsHelper) note="Known malicious infostealer implant path." ;;
     esac
     hit_bad "$path" "$note"
   fi
@@ -207,7 +211,7 @@ elif [ "$findings_susp" -gt 0 ]; then
 else
   printf "%s%sNo known AMOS/Atomic/SHAMOS indicators found.%s\n" "$C_GRN" "$C_BLD" "$C_RST"
   printf "%sThis checks documented indicators as of %s. These families rotate —\n" "$C_DIM" "$IOC_DATE"
-  printf "a clean result lowers the odds, it does not prove you are clean.%s\n" "$C_RST"
+  printf "a clean result means none of the indicators checked were found; it does not prove the Mac is clean.%s\n" "$C_RST"
   printf "Harden next so the next one has a harder time:  %shttps://hardenmac.com/checklist%s\n" "$C_BLD" "$C_RST"
   rc=0
 fi
